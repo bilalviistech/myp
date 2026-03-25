@@ -14,6 +14,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Toast from 'react-native-toast-message';
 import { AuthContext } from '../../context/AuthContext';
+import LoadingModal from '../../components/common/LoadingModal';
 // import { AppleButton, appleAuth } from '@invertase/react-native-apple-authentication';
 
 const LoginScreen = () => {
@@ -21,6 +22,7 @@ const LoginScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(false);
 
   const loginValidationSchema = Yup.object().shape({
     email: Yup.string().email('Enter a valid email').required('Email is required'),
@@ -28,6 +30,7 @@ const LoginScreen = () => {
   });
 
   const handleLogin = async (values) => {
+    setIsLoading(true);
     const email = values.email.trim();
     const password = values.password;
 
@@ -62,7 +65,8 @@ const LoginScreen = () => {
       visibilityTime: 2000,
     });
 
-    await login("123456789875")
+    await login("123456789875");
+    setIsLoading(false);
   };
 
   // const handleAppleSignIn = async () => {
@@ -98,7 +102,7 @@ const LoginScreen = () => {
 
       {/* Formik form */}
       <Formik
-        initialValues={{ email: '', password: '' }}
+        initialValues={{ email: 'testing@mail.com', password: '123456' }}
         validationSchema={loginValidationSchema}
         onSubmit={handleLogin}
       >
@@ -197,6 +201,12 @@ const LoginScreen = () => {
           </View>
         )}
       </Formik>
+
+      <LoadingModal
+        visible={isLoading}
+        title="Signing you in..."
+        subtitle="Please wait a moment"
+      />  
     </SafeAreaView>
   );
 }

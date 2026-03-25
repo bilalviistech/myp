@@ -6,6 +6,7 @@ import AuthStack from './AuthStack';
 import AppStack from './AppStack';
 import { getHasSeenOnboarding, removeHasSeenOnboarding } from '../services/storage';
 import OnboardingScreen from '../components/onboarding/OnboardingScreen';
+import SplashScreen from '../screens/splash/SplashScreen'
 
 const RootStack = createNativeStackNavigator();
 
@@ -32,12 +33,12 @@ export default function RootNavigator() {
   }, []);
 
   if (!hasChecked || isLoading) {
-    return null; // ya <SplashScreen /> bana lo (simple logo + loading)
+    return <SplashScreen />; // ya <SplashScreen /> bana lo (simple logo + loading)
   }
   return (
     <NavigationContainer>
       <RootStack.Navigator screenOptions={{ headerShown: false }}>
-        {showOnboarding && (
+        {!userToken && showOnboarding && (
           <RootStack.Screen
             name="Onboarding"
             component={OnboardingScreen}
